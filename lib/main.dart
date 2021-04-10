@@ -1,10 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'dart:async';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'Meja.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(MyApp(mejas: fetchMejas()));
+}
+
+List<Meja> parseProducts(String responseBody) {
+  final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
+  return parsed.map<Meja>((json) => Meja.fromJson(json)).toList();
+}
+
+Future<List<Meja>> fetchMejas() async {
+  final response = await http.get('http://192.168.1.2:8000/dummy-menu.json');
+  if (response.statusCode == 200) {
+    return parseProducts(response.body);
+  } else {
+    throw Exception('Unable to fetch Meja from the REST API');
+  }
 }
 
 class MyApp extends StatelessWidget {
+  final Future<List<Meja>> mejas;
+  MyApp({Key key, this.mejas}) : super(key: key);
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -16,13 +38,14 @@ class MyApp extends StatelessWidget {
         backgroundColor: Colors.white,
         fontFamily: 'Montserrat',
       ),
-      home: MyHomePage(title: 'WARNAS'),
+      home: MyHomePage(title: 'WARNAS', mejas: mejas),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+  final Future<List<Meja>> mejas;
+  MyHomePage({Key key, this.title, this.mejas}) : super(key: key);
 
   final String title;
 
@@ -31,13 +54,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,166 +90,15 @@ class _MyHomePageState extends State<MyHomePage> {
                 fontWeight: FontWeight.w700,
               ),
             ),
-            SingleChildScrollView(
-              padding: EdgeInsets.symmetric(vertical: 15),
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: <Widget>[
-                  Container( //active
-                    margin: EdgeInsets.symmetric(horizontal: 5),
-                    child: Card(
-                      color: Colors.green,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      child: InkWell(
-                        splashColor: Colors.green,
-                        onTap: () {
-                          print('Meja 1 Tapped');
-                        },
-                        customBorder: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        child: SizedBox(
-                          width: 100,
-                          height: 100,
-                          child: Center(
-                            child: Text(
-                              '1',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 28,
-                                fontWeight: FontWeight.w900,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Container( //active
-                    margin: EdgeInsets.symmetric(horizontal: 5),
-                    child: Card(
-                      color: Colors.green,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      child: InkWell(
-                        splashColor: Colors.green,
-                        onTap: () {
-                          print('Card 2 Tapped');
-                        },
-                        customBorder: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        child: SizedBox(
-                          width: 100,
-                          height: 100,
-                          child: Center(
-                            child: Text(
-                              '2',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 28,
-                                fontWeight: FontWeight.w900,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.symmetric(horizontal: 5),
-                    child: Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      child: InkWell(
-                        splashColor: Colors.green,
-                        onTap: () {
-                          print('Card 3 Tapped');
-                        },
-                        customBorder: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        child: SizedBox(
-                          width: 100,
-                          height: 100,
-                          child: Center(
-                            child: Text(
-                              '3',
-                              style: TextStyle(
-                                fontSize: 28,
-                                fontWeight: FontWeight.w900,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.symmetric(horizontal: 5),
-                    child: Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      child: InkWell(
-                        splashColor: Colors.green,
-                        onTap: () {
-                          print('Card 4 Tapped');
-                        },
-                        customBorder: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        child: SizedBox(
-                          width: 100,
-                          height: 100,
-                          child: Center(
-                            child: Text(
-                              '4',
-                              style: TextStyle(
-                                fontSize: 28,
-                                fontWeight: FontWeight.w900,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.symmetric(horizontal: 5),
-                    child: Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      child: InkWell(
-                        splashColor: Colors.green,
-                        onTap: () {
-                          print('Card 5 Tapped');
-                        },
-                        customBorder: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        child: SizedBox(
-                          width: 100,
-                          height: 100,
-                          child: Center(
-                            child: Text(
-                              '5',
-                              style: TextStyle(
-                                fontSize: 28,
-                                fontWeight: FontWeight.w900,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+            Container(
+              height: 100,
+              child: FutureBuilder<List<Meja>>(
+                future: widget.mejas,
+                builder: (context, snapshot) {
+                  if(snapshot.hasError) print(snapshot.error);
+                  return snapshot.hasData ? MejaCardList(items: snapshot.data) :
+                  Center(child: CircularProgressIndicator());
+                },
               ),
             ),
             Divider(
@@ -364,10 +229,67 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
+        onPressed: (){},
         tooltip: 'Increment',
         child: Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
+    );
+  }
+}
+
+class MejaCardList extends StatelessWidget {
+  final List<Meja> items;
+  MejaCardList({Key key, this.items});
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return ListView.builder(
+      scrollDirection: Axis.horizontal,
+      itemCount: items.length,
+      itemBuilder: (context, index) {
+        return MejaCard(item: items[index]);
+      },
+    );
+  }
+}
+
+class MejaCard extends StatelessWidget {
+  MejaCard({Key key, this.item}) : super(key: key);
+  final Meja item;
+
+  Widget build(BuildContext context) {
+    return Container( //active
+      margin: EdgeInsets.symmetric(horizontal: 5),
+      child: Card(
+        color: this.item.status ? Colors.green : Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30),
+        ),
+        child: InkWell(
+          splashColor: Colors.green,
+          onTap: () {
+            print("Meja 1 tapped");
+          },
+          customBorder: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30),
+          ),
+          child: SizedBox(
+            width: 90,
+            height: 90,
+            child: Center(
+              child: Text(
+                this.item.nomor.toString(),
+                style: TextStyle(
+                  color: this.item.status ? Colors.white : Colors.black87,
+                  fontSize: 28,
+                  fontWeight: FontWeight.w900,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
