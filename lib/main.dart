@@ -3,6 +3,12 @@ import 'package:flutter/rendering.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:warnas_app/MenuState.dart';
+
+//States
+import 'MenuState.dart';
+
+//Models
 import 'Meja.dart';
 
 void main() {
@@ -108,6 +114,7 @@ class _MyHomePageState extends State<MyHomePage> {
               indent: 15,
               endIndent: 15,
             ),
+            // TODO: Sambung API Transaksi yang berlangsung
             Text(
               'Transaksi yang berlangsung',
               style: TextStyle(
@@ -243,7 +250,6 @@ class MejaCardList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return ListView.builder(
       scrollDirection: Axis.horizontal,
       itemCount: items.length,
@@ -269,7 +275,10 @@ class MejaCard extends StatelessWidget {
         child: InkWell(
           splashColor: Colors.green,
           onTap: () {
-            print("Meja 1 tapped");
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => MenuState(item.nomor))
+            );
           },
           customBorder: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30),
